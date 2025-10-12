@@ -7,7 +7,7 @@ endif()
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
-project(bb)
+project(buster)
 
 include_directories(BEFORE ./include)
 
@@ -32,10 +32,3 @@ target_link_libraries(lld_bindings PUBLIC
     ${LLD_MINGW}
     ${LLD_WASM}
 )
-
-# add_compile_options(-Wall -Wextra -pedantic -Wpedantic -Werror -Wno-c99-extensions -Wno-unused-function -Wno-missing-designated-field-initializers -fno-signed-char -fwrapv -fno-strict-aliasing)
-# add_compile_definitions(CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}")
-# add_compile_definitions(BB_CI=${BB_CI})
-
-# add_compile_options(-fsanitize=address)
-# add_link_options(-fsanitize=address)

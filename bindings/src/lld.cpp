@@ -2,11 +2,6 @@
 
 #include "lld/Common/CommonLinkerContext.h"
 
-#ifndef BB_EXPORT
-#define BB_EXPORT extern "C"
-#endif
-#define fn static
-
 #define lld_api_function_signature(name) bool name(llvm::ArrayRef<const char *> args, llvm::raw_ostream &stdoutOS, llvm::raw_ostream &stderrOS, bool exitEarly, bool disableOutput)
 
 #define lld_link_decl(link_name) \
@@ -26,7 +21,7 @@ namespace lld
     lld_link_decl(wasm);
 }
 
-fn LLDResult lld_api_generic(lld_api_args(), LinkerFunction linker_function)
+static LLDResult lld_api_generic(lld_api_args(), LinkerFunction linker_function)
 {
     LLDResult result = {};
     auto arguments = llvm::ArrayRef(argument_pointer, argument_count);
@@ -69,7 +64,7 @@ fn LLDResult lld_api_generic(lld_api_args(), LinkerFunction linker_function)
 }
 
 #define lld_api_function_impl(link_name) \
-BB_EXPORT lld_api_function_decl(link_name)\
+extern "C" lld_api_function_decl(link_name)\
 {\
     return lld_api_generic(argument_pointer, argument_count, exit_early, disable_output, allocate_fn, context, lld::link_name::link);\
 }

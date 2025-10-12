@@ -6,7 +6,7 @@ BASENAME_ASSERTION=""
 
 source basename.sh
 
-gh release download v$LLVM_VERSION --pattern "*${BIRTH_ARCH}-${BIRTH_OS}-*"
+gh release download v$LLVM_VERSION --pattern "*${BUSTER_ARCH}-${BUSTER_OS}-*"
 
 7z x $LLVM_BASENAME.7z
 7z x $LLVM_BASENAME-assertions.7z

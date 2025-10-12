@@ -14,18 +14,18 @@ jobs:
   generate-config:
     runs-on: ubuntu-latest
     outputs:
-      BIRTH_GITHUB_TARGETS: ${{ steps.generate-config.outputs.BIRTH_GITHUB_TARGETS }}
-      BIRTH_CMAKE_BUILD_TYPES: ${{ steps.generate-config.outputs.BIRTH_CMAKE_BUILD_TYPES }}
-      BIRTH_MACOS_AARCH64: ${{ steps.generate-config.outputs.BIRTH_MACOS_AARCH64 }}
-      BIRTH_LINUX_AARCH64: ${{ steps.generate-config.outputs.BIRTH_LINUX_AARCH64 }}
-      BIRTH_LINUX_X86_64: ${{ steps.generate-config.outputs.BIRTH_LINUX_X86_64 }}
-      BIRTH_WINDOWS_X86_64: ${{ steps.generate-config.outputs.BIRTH_WINDOWS_X86_64 }}
+      BUSTER_GITHUB_TARGETS: ${{ steps.generate-config.outputs.BUSTER_GITHUB_TARGETS }}
+      BUSTER_CMAKE_BUILD_TYPES: ${{ steps.generate-config.outputs.BUSTER_CMAKE_BUILD_TYPES }}
+      BUSTER_MACOS_AARCH64: ${{ steps.generate-config.outputs.BUSTER_MACOS_AARCH64 }}
+      BUSTER_LINUX_AARCH64: ${{ steps.generate-config.outputs.BUSTER_LINUX_AARCH64 }}
+      BUSTER_LINUX_X86_64: ${{ steps.generate-config.outputs.BUSTER_LINUX_X86_64 }}
+      BUSTER_WINDOWS_X86_64: ${{ steps.generate-config.outputs.BUSTER_WINDOWS_X86_64 }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Generate config
         id: generate-config
-        uses: birth-software/github-config@v9
+        uses: birth-software/github-config@v10
         with:
           include_windows_aarch64: true
   build_llvm:
@@ -34,19 +34,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ${{ fromJSON(needs.generate-config.outputs.BIRTH_GITHUB_TARGETS) }}
+        os: ${{ fromJSON(needs.generate-config.outputs.BUSTER_GITHUB_TARGETS) }}
         CMAKE_BUILD_TYPE: [ Release ]
-        BIRTH_LLVM_ENABLE_ASSERTIONS: [ ON, OFF ]
+        BUSTER_LLVM_ENABLE_ASSERTIONS: [ ON, OFF ]
     runs-on: ${{ matrix.os }}
     env:
-      BIRTH_MACOS_AARCH64: ${{ needs.generate-config.outputs.BIRTH_MACOS_AARCH64 }}
-      BIRTH_LINUX_AARCH64: ${{ needs.generate-config.outputs.BIRTH_LINUX_AARCH64 }}
-      BIRTH_LINUX_X86_64: ${{ needs.generate-config.outputs.BIRTH_LINUX_X86_64 }}
-      BIRTH_WINDOWS_X86_64: ${{ needs.generate-config.outputs.BIRTH_WINDOWS_X86_64 }}
-      BIRTH_LLVM_ENABLE_ASSERTIONS: ${{ matrix.BIRTH_LLVM_ENABLE_ASSERTIONS }}
+      BUSTER_MACOS_AARCH64: ${{ needs.generate-config.outputs.BUSTER_MACOS_AARCH64 }}
+      BUSTER_LINUX_AARCH64: ${{ needs.generate-config.outputs.BUSTER_LINUX_AARCH64 }}
+      BUSTER_LINUX_X86_64: ${{ needs.generate-config.outputs.BUSTER_LINUX_X86_64 }}
+      BUSTER_WINDOWS_X86_64: ${{ needs.generate-config.outputs.BUSTER_WINDOWS_X86_64 }}
+      BUSTER_LLVM_ENABLE_ASSERTIONS: ${{ matrix.BUSTER_LLVM_ENABLE_ASSERTIONS }}
     steps:
       - name: Maximize build space
-        if: matrix.os == env.BIRTH_LINUX_X86_64 || matrix.os == env.BIRTH_LINUX_AARCH64
+        if: matrix.os == env.BUSTER_LINUX_X86_64 || matrix.os == env.BUSTER_LINUX_AARCH64
         uses: davidgmbb/remove-unwanted-software@master
         with:
           remove-android: 'true'
@@ -58,12 +58,12 @@ jobs:
           remove-cached-tools: 'true'
           remove-swapfile: 'true'
       - uses: actions/checkout@v4
-      - uses: birth-software/github-setup@v9
+      - uses: birth-software/github-setup@v10
       - name: Build
         shell: bash
         env:
           CMAKE_BUILD_TYPE: ${{ matrix.CMAKE_BUILD_TYPE }}
-          BIRTH_ENABLE_CLANG: true
+          BUSTER_ENABLE_CLANG: true
         run: |
           ./build.sh
       - name: Upload LLVM artifact (7z)
@@ -92,10 +92,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        BIRTH_ARCH: [ x86_64, aarch64 ]
+        BUSTER_ARCH: [ x86_64, aarch64 ]
         os: [ ubuntu-24.04-arm ]
     env:
-      BIRTH_OS: windows
+      BUSTER_OS: windows
       CMAKE_BUILD_TYPE: Release
     runs-on: ${{ matrix.os }}
     steps:
@@ -105,7 +105,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash
         env:
-          BIRTH_ARCH: ${{ matrix.BIRTH_ARCH }}
+          BUSTER_ARCH: ${{ matrix.BUSTER_ARCH }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./fix_llvm_windows_assertions.sh
