@@ -6,7 +6,7 @@ on:
     tags:
       - "**"
 env:
-  LLVM_VERSION: 21.1.5
+  LLVM_VERSION: 21.1.7
   CMAKE_STATIC_LIBRARY_PREFIX: lib
   CMAKE_STATIC_LIBRARY_SUFFIX: .a
 
@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate config
         id: generate-config
-        uses: birth-software/github-config@v10
+        uses: birth-software/github-config@v11
         with:
           include_windows_aarch64: true
   build_llvm:
