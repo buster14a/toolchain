@@ -6,7 +6,7 @@ on:
     tags:
       - "**"
 env:
-  LLVM_VERSION: 21.1.8
+  LLVM_VERSION: 22.1.1
   CMAKE_STATIC_LIBRARY_PREFIX: lib
   CMAKE_STATIC_LIBRARY_SUFFIX: .a
 
